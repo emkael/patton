@@ -1,0 +1,6 @@
+; 0:0 table for 4 boards
+[VP]
+MAX=1
+DEUCE=6
+NULL=1
+1=1
