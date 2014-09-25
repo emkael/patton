@@ -173,10 +173,6 @@ UPDATE patton_sums SET h_points = -IF(@boards_per_segment = 4, 1, ROUND(@boards_
 	WHERE (max_saldo - h_saldo) / max_saldo BETWEEN 1/10 AND 1/3;
 -- Druga drużyna zdobywa dopełnienie do zera.
 UPDATE patton_sums SET v_points = -h_points;
--- Podnosimy wynik za saldo z punktu odniesienia 0:0 do właściwego remisu,
--- zależnego od liczby rozdań (2:2 dla 4, 1.5:1.5 dla 3 - n/2:n/2 dla n rozdań)
-UPDATE patton_sums SET v_points = v_points + @boards_per_segment / 2;
-UPDATE patton_sums SET h_points = h_points + @boards_per_segment / 2;
 
 -- Kompilujemy wyrównania Pattonowe, jako sumę BAMów i punktów za saldo
 DELETE FROM patton_adjustments;
