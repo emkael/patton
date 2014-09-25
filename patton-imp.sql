@@ -128,12 +128,12 @@ INSERT INTO patton_scores
 			JOIN scores s2 ON pb.rnd = s2.rnd AND pb.segment = s2.segment AND pb.tabl = s2.tabl AND pb.board = s2.board AND s2.room = 2;
 UPDATE patton_scores SET v_bam = -h_bam;
 
--- Zmienna pomocnicza do wyliczenia punktów za saldo w zależności od liczby rozdań w rundzie.
-SET @boards_per_segment = IF ((SELECT boardspersegment FROM admin) = 4, 1, 0.5); -- Dla 4 rozdań: = 1.0, dla 3 rozdań: = 0.5
--- Nadpisujemy tabelę VP na wiecznie remisową (6:6 dla 4 rozdań, 4.5:4.5 dla 3 rozdań)
-UPDATE tabvp SET vpew = 3 + 3 * @boards_per_segment WHERE dimp = 0;
+-- Zmienna pomocnicza: liczba rozdań w rundzie.
+SET @boards_per_segment = (SELECT boardspersegment FROM admin);
+-- Nadpisujemy tabelę VP na wiecznie remisową (6:6 dla 4 rozdań, 4.5:4.5 dla 3 rozdań, 3/2*n:3/2*n dla n rozdań)
+UPDATE tabvp SET vpew = 1.5 * @boards_per_segment WHERE dimp = 0;
 UPDATE tabvp SET vpns = vpew WHERE dimp = 0;
-UPDATE matches SET vph = 3 + 3 * @boards_per_segment;
+UPDATE matches SET vph = 1.5 * @boards_per_segment;
 UPDATE matches SET vpv = vph;
 
 -- Wypełniamy tabelę salda.
@@ -151,28 +151,32 @@ INSERT INTO patton_sums
 
 -- Wybieramy maksymalne saldo
 UPDATE patton_sums SET max_saldo = IF (h_saldo > v_saldo, h_saldo, v_saldo);
--- Jeśli róznica salda > 1/3 maksymalnego, to gospodarze zdobywają:
---  * 2 punkty przy 4 rozdaniach
---  * 1 punkt przy 3 rozdaniach
-UPDATE patton_sums SET h_points = 2 * @boards_per_segment
+
+-- Roboczo liczymy wynik za saldo względem wyniku 0:0
+-- Jeśli róznica salda > 1/3 maksymalnego, to gospodarze zdobywają
+-- n/2 punktów przy n rozdaniach
+UPDATE patton_sums SET h_points = @boards_per_segment / 2
 	WHERE (max_saldo - v_saldo) / max_saldo > 1/3;
 -- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to gospodarze zdobywają:
---  * 2 punkty przy 4 rozdaniach
---  * 1 punkt przy 3 rozdaniach
-UPDATE patton_sums SET h_points = 1 * @boards_per_segment
+--  * 1 punkt przy 4 rozdaniach
+--  * 1/6 * n, zaokrągloną do 0.1 przy n rozdaniach
+UPDATE patton_sums SET h_points = IF(@boards_per_segment = 4, 1, ROUND(@boards_per_segment / 6, 1))
 	WHERE (max_saldo - v_saldo) / max_saldo BETWEEN 1/10 AND 1/3;
 -- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to goście zdobywają:
---  * 2 punkty przy 4 rozdaniach
---  * 1 punkt przy 3 rozdaniach
-UPDATE patton_sums SET h_points = -2 * @boards_per_segment
+-- n/2 punktów przy n rozdaniach
+UPDATE patton_sums SET h_points = -(@boards_per_segment / 2)
 	WHERE (max_saldo - h_saldo) / max_saldo > 1/3;
 -- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to goście zdobywają:
 --  * 1 punkt przy 4 rozdaniach
---  * 0.5 punktu przy 3 rozdaniach
-UPDATE patton_sums SET h_points = -1 * @boards_per_segment
+--  * 1/6 * n, zaokrągloną do 0.1 przy n rozdaniach
+UPDATE patton_sums SET h_points = -IF(@boards_per_segment = 4, 1, ROUND(@boards_per_segment / 6, 1))
 	WHERE (max_saldo - h_saldo) / max_saldo BETWEEN 1/10 AND 1/3;
 -- Druga drużyna zdobywa dopełnienie do zera.
 UPDATE patton_sums SET v_points = -h_points;
+-- Podnosimy wynik za saldo z punktu odniesienia 0:0 do właściwego remisu,
+-- zależnego od liczby rozdań (2:2 dla 4, 1.5:1.5 dla 3 - n/2:n/2 dla n rozdań)
+UPDATE patton_sums SET v_points = v_points + @boards_per_segment / 2;
+UPDATE patton_sums SET h_points = h_points + @boards_per_segment / 2;
 
 -- Kompilujemy wyrównania Pattonowe, jako sumę BAMów i punktów za saldo
 DELETE FROM patton_adjustments;
