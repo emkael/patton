@@ -133,8 +133,8 @@ SET @boards_per_segment = (SELECT boardspersegment FROM admin);
 -- Nadpisujemy tabelę VP na wiecznie remisową (6:6 dla 4 rozdań, 4.5:4.5 dla 3 rozdań, 3/2*n:3/2*n dla n rozdań)
 UPDATE tabvp SET vpew = 1.5 * @boards_per_segment WHERE dimp = 0;
 UPDATE tabvp SET vpns = vpew WHERE dimp = 0;
-UPDATE matches SET vph = 1.5 * @boards_per_segment;
-UPDATE matches SET vpv = vph;
+UPDATE matches SET vph = 1.5 * @boards_per_segment WHERE (rnd, tabl) IN (SELECT rnd, tabl FROM patton_boards);
+UPDATE matches SET vpv = vph WHERE (rnd, tabl) IN (SELECT rnd, tabl FROM patton_boards);
 
 -- Wypełniamy tabelę salda.
 DELETE FROM patton_sums;
