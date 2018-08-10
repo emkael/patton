@@ -152,24 +152,20 @@ INSERT INTO patton_sums
 -- Wybieramy maksymalne saldo
 UPDATE patton_sums SET max_saldo = IF (h_saldo > v_saldo, h_saldo, v_saldo);
 
--- Roboczo liczymy wynik za saldo względem wyniku 0:0
+-- Roboczo liczymy wynik za saldo względem remisu (n/2 : n/2)
 -- Jeśli róznica salda > 1/3 maksymalnego, to gospodarze zdobywają
--- n/2 punktów przy n rozdaniach
+-- n/2 punktów przy n rozdaniach (czyli wygrywają do zera)
 UPDATE patton_sums SET h_points = @boards_per_segment / 2
 	WHERE (max_saldo - v_saldo) / max_saldo > 1/3;
--- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to gospodarze zdobywają:
---  * 1 punkt przy 4 rozdaniach
---  * 1/6 * n, zaokrągloną do 0.1 przy n rozdaniach
-UPDATE patton_sums SET h_points = IF(@boards_per_segment = 4, 1, ROUND(@boards_per_segment / 6, 1))
+-- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to gospodarze zdobywają 1 punkt
+UPDATE patton_sums SET h_points = 1
 	WHERE (max_saldo - v_saldo) / max_saldo BETWEEN 1/10 AND 1/3;
--- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to goście zdobywają:
--- n/2 punktów przy n rozdaniach
+-- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to goście zdobywają
+-- n/2 punktów przy n rozdaniach (czyli wygrywają do zera)
 UPDATE patton_sums SET h_points = -(@boards_per_segment / 2)
 	WHERE (max_saldo - h_saldo) / max_saldo > 1/3;
--- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to goście zdobywają:
---  * 1 punkt przy 4 rozdaniach
---  * 1/6 * n, zaokrągloną do 0.1 przy n rozdaniach
-UPDATE patton_sums SET h_points = -IF(@boards_per_segment = 4, 1, ROUND(@boards_per_segment / 6, 1))
+-- Jeśli róznica salda > 1/10 maksymalnego, ale < 1/3, to goście zdobywają 1 punkt
+UPDATE patton_sums SET h_points = -1
 	WHERE (max_saldo - h_saldo) / max_saldo BETWEEN 1/10 AND 1/3;
 -- Druga drużyna zdobywa dopełnienie do zera.
 UPDATE patton_sums SET v_points = -h_points;
