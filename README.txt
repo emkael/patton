@@ -1,32 +1,32 @@
-Patton dla Teamów
+Patton dla TeamÃ³w
 
 Opis
 
-Zestaw prostych narzêdzi (skryptów SQL) pozwalaj¹cych na przeliczenie turnieju
-teamów liczonego Pattonem, a za³o¿onego w Teamach JFR.
+Zestaw prostych narzÄ™dzi (skryptÃ³w SQL) pozwalajÄ…cych na przeliczenie turnieju
+teamÃ³w liczonego Pattonem, a zaÅ‚oÅ¼onego w Teamach JFR.
 
 Autor
 
-Micha³ Klichowicz (emkael.info)
-Narzêdzia powsta³y na Bryd¿owym Ogólnopolskim Obozie M³odzie¿owym 2014,
-pod nadzorem sêdziego g³ównego BOOMu - Czai.
+MichaÅ‚ Klichowicz (emkael.info)
+NarzÄ™dzia powstaÅ‚y na BrydÅ¼owym OgÃ³lnopolskim Obozie MÅ‚odzieÅ¼owym 2014,
+pod nadzorem sÄ™dziego gÅ‚Ã³wnego BOOMu - Czai.
 
-Instalacja/u¿ycie
+Instalacja/uÅ¼ycie
 
-1.  Za³o¿yæ turniej w JFR Teamach (do wyboru: BAM / IMP+VP)
-1a. Dla turnieju IMP+VP wczytaæ (w sumie dowoln¹, ale mo¿e byæ do³¹czona,
-    zdegenerowana) tabelê VP.
-2.  Uruchomiæ co najmniej raz odpowiedni skrypt SQL (dla turnieju za³o¿onego
+1.  ZaÅ‚oÅ¼yÄ‡ turniej w JFR Teamach (do wyboru: BAM / IMP+VP)
+1a. Dla turnieju IMP+VP wczytaÄ‡ (w sumie dowolnÄ…, ale moÅ¼e byÄ‡ doÅ‚Ä…czona,
+    zdegenerowana) tabelÄ™ VP.
+2.  UruchomiÄ‡ co najmniej raz odpowiedni skrypt SQL (dla turnieju zaÅ‚oÅ¼onego
     jako BAM: patton-bam.sql; dla turnieju IMP+VP: patton-imp.sql) PRZED
-	aplikacj¹ pierwszego wyrównania w turnieju.
-3.  Uruchomiæ skrypt ka¿dorazowo dla przeliczenia wyników.
+	aplikacjÄ… pierwszego wyrÃ³wnania w turnieju.
+3.  UruchomiÄ‡ skrypt kaÅ¼dorazowo dla przeliczenia wynikÃ³w.
 
 Licencja i dodatkowe informacje
 
-Narzêdzia udostêpniane s¹ bezp³atnie i bez jakiejkolwiek gwarancji dzia³ania
+NarzÄ™dzia udostÄ™pniane sÄ… bezpÅ‚atnie i bez jakiejkolwiek gwarancji dziaÅ‚ania
 i wsparcia technicznego.
-Dozwolone jest u¿ywanie, rozpowszechnianie oraz wszelkie modyfikacje
-pod warunkiem niepobierania op³at oraz do³¹czenia informacji o autorstwie.
+Dozwolone jest uÅ¼ywanie, rozpowszechnianie oraz wszelkie modyfikacje
+pod warunkiem niepobierania opÅ‚at oraz doÅ‚Ä…czenia informacji o autorstwie.
 
-Wiêcej informacji nt. dzia³ania narzêdzi - w komentarzach kodu Ÿród³owego
-plików SQL.
+WiÄ™cej informacji nt. dziaÅ‚ania narzÄ™dzi - w komentarzach kodu ÅºrÃ³dÅ‚owego
+plikÃ³w SQL.
